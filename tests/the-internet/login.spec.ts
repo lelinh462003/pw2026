@@ -1,14 +1,31 @@
-import { test, expect } from "@playwright/test";
+// import { test, expect } from "@playwright/test";
+//import { LoginPage } from "../pages/login.page";
+import { test, expect } from "../fixtures/the-internet.fixture";
 
-// Test case = fix(Arrange, Act, Assert)
-test("should successfully login with valid credentials", async ({ page }) => {
-    //arrange
-    await page.goto("https://the-internet.herokuapp.com/login");
-    //actions
-    await page.getByRole("textbox", { name: "Username" }).fill("tomsmith");
-    await page.getByRole("textbox", { name: "Password" }).fill("SuperSecretPassword!");
-    await page.getByRole("button", { name: " Login" }).click();
-    //assertions
-    await expect(page.getByText("You logged into a secure area")).toBeVisible();
-    await expect(page.locator("h4")).toContainText("Welcome to the Secure Area. When you are done click logout below.");
+test("Username and Password is correct", async ({ loginPage }) => {
+    //const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login("tomsmith", "SuperSecretPassword!");
+
+    await expect(await loginPage.getSuccessFlashMessage()).toContainText("You logged into a secure area");
+
+    await expect(await loginPage.getWelcomeMessage()).toContainText(
+        "Welcome to the Secure Area. When you are done click logout below.",
+    );
 });
+
+// import { test as base, expect } from "@playwright/test";
+// import { LoginPage } from "../pages/login.page";
+
+// type TheInternetFixture = {
+//     loginPage: LoginPage;
+// };
+
+// export const test = base.extend<TheInternetFixture>({
+//     loginPage: async ({ page }, use) => {
+//         const loginPage = new LoginPage(page);
+//         await use(loginPage);
+//     },
+// });
+
+// export {expect} from '@playwright/test';

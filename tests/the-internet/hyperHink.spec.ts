@@ -33,3 +33,23 @@ test("HyperHink", async ({ page }) => {
         "This page returned a 500 status code. For a definition and common list of HTTP status codes, go here",
     );
 });
+
+test("verify status code link", async ({ page }) => {
+    await page.goto("https://the-internet.herokuapp.com/status_codes");
+
+    await page.getByRole("link", { name: "200" }).click();
+    expect(page.url()).toContain("status_code/200");
+    await page.getByRole("link", { name: "here" }).click();
+
+    await page.getByRole("link", { name: "301" }).click();
+    expect(page.url()).toContain("status_code/301");
+    await page.getByRole("link", { name: "here" }).click();
+
+    await page.getByRole("link", { name: "404" }).click();
+    expect(page.url()).toContain("status_code/404");
+    await page.getByRole("link", { name: "here" }).click();
+
+    await page.getByRole("link", { name: "500" }).click();
+    expect(page.url()).toContain("status_code/500");
+    await page.getByRole("link", { name: "here" }).click();
+});
